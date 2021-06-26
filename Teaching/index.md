@@ -2,7 +2,7 @@
 title: Teaching
 permalink: /Teaching/
 layout: splash
-author_profile: false
+author_profile: true
 header:
   overlay_color: "#000"
   overlay_filter: "0.05"
