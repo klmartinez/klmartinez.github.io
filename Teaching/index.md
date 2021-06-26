@@ -19,6 +19,8 @@ In 2018 and 2019 I taught R-DAVIS, a required quarter-long course for the [UC Da
 
 In 2019 and 2020 I taught a quarter-long course on introductory R and RStudio skills for undergraduates in the [Research Scholars Program in Insect Biology](http://insectscholars.ucdavis.edu/). We covered similar content to the R-DAVIS course, without git and GitHub. Students completed a final project carrying out a simple analysis and visualization for an existing project in the lab the students are working in.
 
+<br>
+
 # Workshops
 
 ## Geospatial Data Carpentry Workshop
