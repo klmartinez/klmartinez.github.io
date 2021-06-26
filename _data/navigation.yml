@@ -1,9 +1,11 @@
 # main links
 main:
   - title: "About Me"
-    url: /About_Me
+    url: _pages/About_Me
   - title: "Research"
     url: /Research
+  - title: "Teaching"
+    url: /Teaching
   - title: "Photography"
     url: /Photography
   - title: "Blog"
