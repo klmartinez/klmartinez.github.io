@@ -1,31 +1,8 @@
 ---
-title: "Blog"
+title: "R and Other Stuff"
 subtitle: "Thoughts on ecology, and R, and other stuff"
+layout: home
 ---
-
-{% if paginator %}
-  {% assign posts = paginator.posts %}
-{% else %}
-  {% assign posts = site.posts %}
-{% endif %}
-
-{% assign entries_layout = page.entries_layout | default: 'list' %}
-<div class="entries-{{ entries_layout }}">
-  {% for post in posts %}
-
-  {% capture url_to_use %}{{ post.url" }}{% endcapture %}
-    {% if post.redirect_url %}
-      {% capture url_to_use %}{{ post.redirect_url" }}{% endcapture %}
-    {% endif %}
-
-    {% include archive-single.html type=entries_layout %}
-    
-  {% endfor %}
-</div>
-
-{% include paginator.html %}
-
-
 
 <ul>
   {% for post in site.posts %}
