@@ -19,6 +19,10 @@ In 2018 and 2019 I taught R-DAVIS, a required quarter-long course for the [UC Da
 
 In 2019 and 2020 I taught a quarter-long course on introductory R and RStudio skills for undergraduates in the [Research Scholars Program in Insect Biology](http://insectscholars.ucdavis.edu/). We covered similar content to the R-DAVIS course, without git and GitHub. Students completed a final project carrying out a simple analysis and visualization for an existing project in the lab the students are working in.
 
+## Biosciences 2B: Introduction to Ecology and Evolution (Teaching Assistant)
+
+I was a TA for the UC Davis BIS 2B course for several years. This position involved being the sole teacher for 2 lab sections per quarter, delivering lecture content, assisting students through lab procedures, and grading lab reports. 
+
 <br>
 
 # Workshops
