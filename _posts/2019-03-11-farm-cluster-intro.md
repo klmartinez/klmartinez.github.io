@@ -5,7 +5,7 @@ excerpt: "Getting you up and running R on
 the UC Davis FARM computing cluster."
 ---
 
-## Intro
+# Intro
 
 This post is essentially a writeup of a \~2 hour in-person lesson I did
 for a few friends who were interested in using the UC Davis CAES FARM
@@ -23,7 +23,7 @@ about anything. This lesson is intended to help a novice get their R
 scripts running on the FARM, using whatever strategy or philosophy I’ve
 figured out to get **my** R scripts running on the FARM.
 
-#### What Will Be Covered
+## What Will Be Covered
 
   - a few commands in Unix shell
   - accessing the FARM with SSH
@@ -33,7 +33,7 @@ figured out to get **my** R scripts running on the FARM.
   - general format for saving R results/outputs
   - how to install R packages on the FARM
 
-#### What Won’t Be Covered
+## What Won’t Be Covered
 
   - parallelization of code
       - this is pretty specific to your task
@@ -51,7 +51,7 @@ figured out to get **my** R scripts running on the FARM.
       - I’ve only ever worked on one cluster
       - most of this basic stuff should carry over to most clusters
 
-## Unix Shell Basics
+# Unix Shell Basics
 
 Terminal, command line, and shell, oh my\! I’m going to do a quick
 rundown of these terms, to start. A Terminal is a program that lets you
@@ -107,7 +107,7 @@ you type `cd ..`. `..` just means “up one level”.
 We will be using `cd` and `ls` a ton, and we’ll introduce other commands
 as we need them.
 
-## Showing Hidden Files
+# Showing Hidden Files
 
 You may have noticed some strange files when I ran `ls -a` on my
 computer, a whole bunch of files that all begin with `.`. These are
@@ -131,7 +131,7 @@ Finder, and click the Relaunch button. Now all your hidden files should
 show up in your Finder. We’ll be looking at some of these files later
 on.
 
-## Making a FARM Account
+# Making a FARM Account
 
 If you go to [the FARM official
 website](https://wiki.cse.ucdavis.edu/support/systems/farm) and scroll
@@ -141,7 +141,7 @@ and instructions on making an account. Please follow these instructions.
 When you log in to the Account Request Form, it will ask you to upload
 an *SSH public key*. We’ll go through this process next.
 
-## Generating an SSH Key
+# Generating an SSH Key
 
 SSH is a widely-used protocol for securely logging into a computer from
 another computer. Since the FARM is basically another gigantic computer,
@@ -186,7 +186,7 @@ FARM account. You should get an email when your account is set up and
 you’re able to access the FARM. Be sure to write down your username and
 any other info you’re given.
 
-## Set Up Known Host
+# Set Up Known Host
 
 Once you’ve been notified that your FARM account has been created, you
 should be able to log on to the FARM\! Before that, we’ll set up some
@@ -227,7 +227,7 @@ where to write the file. Press enter to write the file to the name you
 already gave. You should now be back in your regular Terminal, and if
 you run `ls`, you’ll see there’s a new file called `config`.
 
-## Logging On and Looking Around
+# Logging On and Looking Around
 
 Now that we’ve told our `ssh` protocol that we have a host called
 “farm”, let’s log into it. Open up a new Terminal window and put it
@@ -246,7 +246,7 @@ to this as your **FARM home directory**. Use `ls` to see what’s here.
 
 <script id="asciicast-yDlpQexokap99NCGs3uVKzNHT" src="https://asciinema.org/a/yDlpQexokap99NCGs3uVKzNHT.js" async></script>
 
-## Making Directories and Files
+# Making Directories and Files
 
 You shouldn’t have any folders yet, so let’s make a folder in you FARM
 home directory called `testing` by using the command `mkdir testing`.
@@ -275,7 +275,7 @@ to accept the file name `README.md`.
 
 <script id="asciicast-syBGh9ZEC5kizenN22YYkkefB" src="https://asciinema.org/a/syBGh9ZEC5kizenN22YYkkefB.js" async></script>
 
-## `rsync` Basics
+# `rsync` Basics
 
 Alright, we’ve now made some files on the FARM, but what if we want to
 work with files you can’t just make from scratch, like data? This will
@@ -340,7 +340,7 @@ Then `cd` into that folder and check to make sure your dummy files are
 in there. You can use this same basic pattern to move data or other
 files onto the FARM with relatively little work.
 
-## `.R` and `.sh` Paired Scripts
+# `.R` and `.sh` Paired Scripts
 
 Now that we know how to move stuff around, we’re ready to start making
 actual scripts on the FARM. I’ve found that the best way to keep my
@@ -389,7 +389,7 @@ compared to what we did, which was create a `.R` script directly on the
 cluster. The next script, however, is going to be specific to the
 cluster. I’m going to take a minute to talk about SLURM.
 
-### SLURM
+## SLURM
 
 Slurm is a piece of software that controls how jobs get allocated across
 the cluster. The cluster is made up of a bunch of different computing
@@ -538,7 +538,7 @@ That’s a lot of stuff to submit a job, but the nice thing about this
 script is that you can pretty much copy it for other jobs, with the
 necessary modifications to file paths, run times, etc.
 
-## `squeue`
+# `squeue`
 
 One last stop before we actually submit our test job\! There are a few
 SLURM commands you can use to take a look at information about the
@@ -581,7 +581,7 @@ file. You might have to close your Terminal window, open a new one, and
 get back onto the FARM in order for the `.bash_profile` to kick in. Now
 typing `sq` should show you all of **your** jobs\!
 
-## Submitting Jobs with `sbatch`
+# Submitting Jobs with `sbatch`
 
 Finally, the moment you’ve all been waiting for… it’s time to submit a
 job. First thing to do is navigate to the working directory you set in
@@ -607,7 +607,7 @@ and check your email to see if you got the start and finish notification
 emails, otherwise we’ll check for the standard output and standard error
 files.
 
-### `scancel`
+## `scancel`
 
 Before I forget, there’s an easy way to cancel a job if you need to.
 Maybe you notice an error in your R script, but you’ve already submitted
@@ -616,7 +616,7 @@ the job. All you’ve gotta do is use the command `scancel`. You can use
 `sq` to see all your current jobs), or `scancel -u username` to cancel
 all of your jobs.
 
-## Checking `stdout` and `sterror`
+# Checking `stdout` and `sterror`
 
 Remember how we created a `slurm_log` directory to store the standard
 output and error files created with each job? Now we’re going to go
@@ -642,7 +642,7 @@ will show up, whether they were generated by R or SLURM. Learning to
 parse out these error files may take some time and plenty of Google, but
 they’re an important part of learning to debug your work.
 
-## `rsync` Results Back
+# `rsync` Results Back
 
 If you look back at the R script that we ran, you’ll notice that we
 saved a single R object as a `.rds` file. In our case, the object is
