@@ -21,7 +21,7 @@ In 2019 and 2020 I taught a quarter-long course on introductory R and RStudio sk
 
 ## Biosciences 2B: Introduction to Ecology and Evolution (Teaching Assistant)
 
-I was a TA for the UC Davis BIS 2B course for several years. This position involved being the sole teacher for 2 lab sections per quarter, delivering lecture content, assisting students through lab procedures, and grading lab reports. 
+I was a TA for the UC Davis BIS 2B course for several years. This position involved being the sole teacher for 2 lab sections per quarter, delivering lecture content, assisting students through lab procedures, and grading lab reports. I received a mean 4.75/5 rating from end-of-quarter student evaluations over 3 times teaching the course.
 
 <br>
 
