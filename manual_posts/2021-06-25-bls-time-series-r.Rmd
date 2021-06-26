@@ -1,0 +1,291 @@
+---
+title: "Working With BLS Time Series Data"
+author: "Michael Culshaw-Maurer"
+date: "`r format(Sys.time(), '%B %d, %Y')`" 
+output:
+  tufte::tufte_html:
+    tufte_variant: "envisioned"
+
+---
+
+```{css, echo=F}
+.codeChunk {
+background-color: rgb(247, 247, 247);
+border: 10px solid rgb(247, 247, 247);
+border-radius: 4px
+}
+```
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(class.source = "codeChunk")
+my_key <- "a5df4a40edd344738d8efcb3ea58e8bc"
+```
+
+# Load Packages
+
+We're going to load a handful of packages to pull in BLS data, manipulate data, and demo a little bit of forecasting.
+
+```{marginfigure}
+The `fpp3` package corresponds to [this book](https://otexts.com/fpp3/), which uses the [`tidyverts`](https://tidyverts.org/) series of tidy packages for time series.
+```
+
+```{r load-packages, message=F}
+library(blscrapeR)
+library(tidyverse)
+library(slider)
+library(fpp3)
+library(seasonal)
+```
+
+# Get Data
+
+Next up we'll fetch our data using the `bls_api()` function from the `blscrapeR` package. The BLS API only allows for up to 20 years of data in a single request, so we'll break our range of years into two chunks. We can then request the two ranges of data and bind the rows together to make a single dataframe.
+
+```{r get-data, cache=T}
+
+codes <- c("LNS14000000", "CES0000000001", "CUSR0000SA0")
+
+d1 <- bls_api(codes, registrationKey = my_key, 
+             startyear = 2021-19, endyear = 2021)
+
+d2 <- bls_api(codes, registrationKey = my_key, 
+                    startyear = 2021-39, endyear = 2021-20)
+
+d <- bind_rows(d1, d2)
+```
+
+```{marginfigure}
+Not sure it's even necessary to stitch together API calls like this if you work for the BLS, but what do I know?
+```
+
+This approach works fine for a short range of data, but if you have to get a bigger range that requires more requests being stitched together, it can get inefficient. I've written a short function that will get any range of data for any number of codes. We won't use it for this lesson, but you can check it out if you want:
+
+<details>
+<summary>Function to get N years of data</summary>
+```{r n-years-function, eval=F}
+
+get_last_n_years <-
+  function(n = 50,
+           codes = c("LNS14000000", "CES0000000001", "CUSR0000SA0"),
+           registration_key) {
+    
+    this_year <- Sys.Date() %>% year()
+    
+    d <- seq(from = this_year - n, to = this_year)
+    dsplit <- split(d, ceiling(seq_along(d) / 20))
+    
+    d <- tibble(min = map_dbl(dsplit, min),
+                max = map_dbl(dsplit, max))
+    
+    d %>%
+      rowwise() %>%
+      mutate(data = list(
+        bls_api(
+          codes,
+          registrationKey = registration_key,
+          startyear = min,
+          endyear = max
+        )
+      )) %>%
+      unnest(data) %>%
+      select(-min, -max) %>%
+      distinct() %>% 
+      arrange(year, period)
+  }
+
+d <- get_last_n_years(n = 50)
+```
+</details>
+</div>
+
+
+## Modifying our dataframe
+
+Let's take a look at our dataframe: 
+
+```{r look-at-data}
+d
+```
+
+Maybe BLS folks can easily remember what the different codes refer to, but nonetheless, it might be nice to give them slighly more informative names. We'll make a new column and use the `case_when()` function to give informative names according to the code column. The `case_when()` function is very handy- you write a conditional statement that uses existing columns, then a tilde, then the value the new column should have if that conditional statement is `TRUE`.
+
+```{marginfigure}
+The lefthand side of a `case_when()` statement can use multiple columns, like `period_name == "May" & year > 2000`. Any conditional statement that returns `TRUE` or `FALSE` will work.
+```
+
+```{r add-metric}
+d <- d %>% 
+  mutate(metric = case_when(
+    seriesID == "LNS14000000" ~ "unemp",
+    seriesID == "CES0000000001" ~ "total_emp",
+    seriesID == "CUSR0000SA0" ~ "cpi_u",
+  ))
+
+d
+```
+
+Another issue is that we have separate columns for years and months, but we'd like to stitch those together into a `date` column that R can work with.
+
+# Intro to **`lubridate`**
+
+```{marginfigure}
+You can download the [official `lubridate` cheat sheet](https://github.com/rstudio/cheatsheets/raw/master/lubridate.pdf) for more information.
+```
+
+`lubridate` is a package in the `tidyverse` that makes handling dates and times *slightly* less painful. There are a series of functions that allow you to parse components of dates and times into single date or datetime columns. They are named according to the order of components: `ymd()` will take dates ordered year-month-day, and `mdy_hs()` will take datetimes ordered month-day-year-hour-second. We'll use the `my()` function to create a date column from our `periodName` and `year` columns.
+
+```{r add-date}
+d <- d %>% 
+  mutate(date = lubridate::my(paste(periodName, year, sep = "/")))
+
+d
+```
+
+Notice that all of our dates occur on the first day of the month. Date objects in R require year, month, and day, but since we haven't specified a day, `my()` defaults to the first of the month.
+
+```{marginfigure}
+The way Excel handles dates is [particularly weird](https://docs.microsoft.com/en-us/office/troubleshoot/excel/1900-and-1904-date-system).
+```
+
+It's worth noting that dates and times are often represented differently on different operating systems or in different software. When storing dates in a file, such as a CSV, it's almost always best to keep the components in separate columns. That way Excel or other programs can't mess with them, and you can easily use a `lubridate` function to stitch the components together into a date when you need to.
+
+# Plotting time series
+
+Let's take a look at our time series, just to get a feel for what they look like. We'll use `ggplot` to make our plots. We'll put `date` on the x axis and the `value`s on the y axis to make a time series plot. Since the 3 metrics we're looking at have very different scales, it doesn't make much sense to plot them all together. Instead, we'll use `facet_wrap()` to create separate facets for each `metric`. We need to set `scales = "free_y"` so that each metric's y axis is scaled independently. Finally, we'll add `theme_minimal()` for a little cleaner appearance.
+
+```{r plot-timeseries, fig.fullwidth=TRUE, dpi=300, fig.width=7, fig.height=3.5}
+d %>% 
+  ggplot(aes(x = date, y = value)) +
+  geom_line() +
+  facet_wrap(vars(metric), ncol = 1, scales = "free_y") +
+  theme_minimal()
+```
+
+# Moving windows
+
+```{marginfigure}
+You can check out the [`slider` website](https://davisvaughan.github.io/slider/) for more information.
+```
+
+One thing we might want to look at is a moving-window or "rolling" average. We'll use the `slider` package, which has a very flexible interface to make calculations with rolling windows, and its syntax is very similar to the `tidyverse`'s `purrr` package.
+
+```{marginfigure}
+There have been a number of similar packages and functions such as `zoo::rollapply()`, `tibbletime::rollify()`, and `tsibble::slide()`, but `slider` is the latest and most flexible approach.
+```
+
+Let's look at the rolling average of unemployment for the last 10 years. First we'll `filter()` to get the unemployment values and years from 2011 on. Next we'll `select()` only the date and value columns, renaming the `value` column to `unemployment`. Then we'll use `arrange()` to sort our rows by date.
+
+```{r unemp-rolling-average}
+unemp_last10 <- d %>% 
+  filter(metric == "unemp", year >= 2011) %>% 
+  select(date, unemployment = value) %>% 
+  arrange(date) 
+
+unemp_last10
+```
+
+```{marginfigure}
+The `slider` package also has functions called `slide_index()` and `slide_period()` that allow for even more flexibility in the way you determine your window. They're not quite necessary for these monthly time series.
+```
+
+Now we can use a `slide_` function to apply the `mean()` function to a window of unemployment values, with the window sliding along our dates. We'll use `slide_dbl()` because we want to return a numeric, or double, vector. To get a 5-month average, we set the `.before` and `.after` values to 2.
+
+```{r five-month}
+unemp_last10 <- unemp_last10 %>% 
+  mutate(five_month_avg = slide_dbl(unemployment, mean, 
+                                    .before = 2, .after = 2))
+```
+
+## Plotting moving window averages
+
+Let's plot it to take a look at the 5-month average time series.
+
+```{r plot-five-month, fig.fullwidth=TRUE, dpi=300, fig.width=7, fig.height=3.5}
+
+unemp_last10 %>% 
+  ggplot(aes(x = date, y = five_month_avg)) +
+  geom_line() +
+  theme_minimal()
+
+```
+
+It's probably more useful to plot them together, so we can use `pivot_longer()` to bring the `unemployment` and `five_month_average` values into a single column, and then color the lines according to each type.
+
+```{r plot-together, fig.fullwidth=TRUE, dpi=300, fig.width=7, fig.height=3.5}
+
+unemp_last10 %>% 
+  pivot_longer(cols = c(unemployment, five_month_avg)) %>% 
+  ggplot(aes(x = date, y = value, color = name)) +
+  geom_line() +
+  scale_color_manual(values = c("red", "black")) +
+  theme_minimal()
+
+```
+
+# **`tidyverts`** demo
+
+The [`tidyverts` series of packages](https://tidyverts.org/) is designed to work with time series data in a "tidy" way, meaning it plays well with the broader `tidyverse` set of packages. The developers of these packages have a fantastic book on time series forecasting with `tidyverts`, called [Forecasting: Principles and Practice](https://otexts.com/fpp3/). It goes into great depth and I recommend checking it out, but I'll do a quick demo of how slick these packages are for working with time series.
+
+## Making a `tsibble` object
+
+```{marginfigure}
+The `yearmonth()` function is a bit idiosyncratic to the `tidyverts` packages, and our `ym` column isn't a "date" in the normal R sense, which is why we're only using it now.
+```
+
+First, we have to convert our dataframe into a `tsibble` object, which is basically a dataframe that knows that it's a time series. First we have to make a new column that just hold the "year-month" combination, using the `tsibble` function `yearmonth()`. Then we convert the dataframe to a `tsibble` object with the `ym` column as the time series index.
+
+```{r tsibble}
+unemp_last10 <- unemp_last10 %>% 
+  mutate(ym = yearmonth(date)) %>% 
+  as_tsibble(index = ym)
+
+unemp_last10
+```
+
+## X13-ARIMA-SEATS time series decomposition
+
+The first thing we'll do is a quick time series decomposition using the X13-ARIMA-SEATS methods.
+
+```{marginfigure}
+The X13-ARIMA-SEATS methods rely on the `seasonal` package, which also installs the X13 binary on your computer.
+```
+
+Next, we use several functions to create two decomposition models. We send our data into the `model()` function, where we define two models: `x11` and `seats`. Both are created using the `X_13ARIMA_SEATS()` functions.
+
+```{r x13-models, message=F}
+x13_unemp_models <- unemp_last10 %>% 
+  model(x11 = X_13ARIMA_SEATS(unemployment ~ x11()),
+        seats = X_13ARIMA_SEATS(unemployment ~ seats()))
+```
+
+Next we take the object containing both models, pass it to the `components()` function, which extracts the model components for plotting, then send that to the `autoplot()` function, which generates a premade `ggplot`, and we add `theme_minimal()` and `scale_color_brewer()` so it looks nice.
+
+```{r x13-plots, message=F, fig.fullwidth=TRUE, dpi=300, fig.width=7, fig.height=3.5}
+x13_unemp_models %>% 
+  components() %>% 
+  autoplot() +
+  theme_minimal() +
+  scale_colour_brewer(type = "qual")
+```
+
+That's a pretty small amount of code to generate two fairly sophisticated time series decompositions!
+
+## Simple forecasting workflow
+
+```{marginfigure}
+The [Forecasting: Principles and Practice](https://otexts.com/fpp3/) book demonstrates some far more sophisticated forecasting methods, I just chose a simple one to show the basic workflow.
+```
+
+Finally, we'll do a very simple forecast of the data. We again use the `model()` function, but then we use the `RW()` function to generate a random walk model, and use the `drift()` function to do a simple drift model. This basically just draws a line from the starting point to the end point of our time series and projects it forward in time. We then send this to the `forecast()` function and ask it to forecast 3 years into the future. Finally, we send this to `autoplot()` and add in the original `unemp_last10` dataframe so we see the original time series as well as the forecast.
+
+```{r simple-forecast, fig.fullwidth=TRUE, dpi=300, fig.width=7, fig.height=3.5}
+unemp_last10 %>% 
+  model(RW(unemployment ~ drift())) %>% 
+  forecast(h = "3 years") %>% 
+  autoplot(unemp_last10) +
+  theme_minimal()
+```
+
+Not too bad for only a few lines of code!
+
+
