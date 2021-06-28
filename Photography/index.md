@@ -25,6 +25,8 @@ feature_row:
     btn_class: "btn--inverse"
 ---
 
-{% include feature_row type="center" %}
+**Saint John's University |** This is a series taken on the SJU campus in Collegeville, MN, where I went to undergrad. 
 
- <a href="https://mcmaurer.github.io/Photography/SJU_Photos"><img src="/assets/images/Lightroom_JPEG_Exports/website-1060632.jpg" width=40%/></a>
+
+ <a href="https://mcmaurer.github.io/Photography/SJU_hotos"><img src="/assets/images/Lightroom_JPEG_Exports/website-1060632.jpg" width=40%/></a>
+
