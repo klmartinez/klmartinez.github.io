@@ -10,4 +10,4 @@ A behavioral ecologist by training, I received my PhD from the Graduate Group in
 
 I'm a hobbyist photographer, which serves as a nice creative outlet after a long day in the lab or office. You can check out some of my galleries on my [photography page](https://mcmaurer.github.io/Photography/). I also enjoy playing racquetball and lacrosse, camping, canoeing, hiking, and thrift shopping.
 
-You can also contact me at culshawmaurer [at] arizona [dot] edu. You can follow me on Twitter or Github by following the links at the bottom of this page. You can also try carrier pigeon, message in a bottle, or yelling really loud, but these have proven less successful.
+You can [contact me by email](https://mcmaurer.github.io/Email_Me/) or follow me on Twitter, Github, or Instagram by following the links at the bottom of this page. You can also try carrier pigeon, message in a bottle, or yelling really loud, but these have proven less successful.
