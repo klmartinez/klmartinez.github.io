@@ -1,9 +1,7 @@
 ---
-layout: splash
+layout: single
 author_profile: false
 ---
-
-<img src="/assets/images/Lightroom_JPEG_Exports/website-1080864.jpg" alt="Photo of me" width="80%">
 
 ![image-center](/assets/images/Lightroom_JPEG_Exports/website-1080864.jpg){: .align-center}
 
