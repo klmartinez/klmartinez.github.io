@@ -3,7 +3,7 @@ layout: splash
 author_profile: false
 ---
 
-<img align="center" src="/assets/images/Lightroom_JPEG_Exports/website-1080864.jpg" alt="Photo of me">
+<img align="center" src="/assets/images/Lightroom_JPEG_Exports/website-1080864.jpg" alt="Photo of me" width="80%">
 
 My name is Michael Culshaw-Maurer. I'm a postdoctoral researcher working with [The Carpentries](https://carpentries.org/) and [CyVerse](https://cyverse.org/) to improve computational and quantitative education for researchers across a wide range of fields. I also help out with [R help sessions](https://jcoliver.github.io/learn-r/schedule) at the University of Arizona, and I serve on the UA [Data Science Research and Training Steering Committee](https://datascience.arizona.edu/steering-committee). 
 
