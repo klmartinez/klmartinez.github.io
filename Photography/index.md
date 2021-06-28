@@ -19,7 +19,7 @@ feature_row2:
     btn_label: "View"
     btn_class: "btn--inverse"
     title: "Saint John's University"
-    excerpt: "These photos from the SJU campus, where I went to undergrad, were taken over a few trips back to campus after I'd left for grad school."
+    excerpt: "These photos from SJU, where I went to undergrad, and surrounding areas were taken during several trips back to campus after moving to California for grad school."
 feature_row3:
   - image_path: /assets/images/Lightroom_JPEG_Exports/website-1070973-2.jpg
     url: /Photography/backyard_jungle
