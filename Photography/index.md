@@ -9,24 +9,32 @@ header:
 feature_row:
   - image_path: /assets/images/Lightroom_JPEG_Exports/website-1010488.jpg
     url: /Photography/bwca
-    btn_label: "Boundary Waters"
+    btn_label: "View"
     btn_class: "btn--inverse"
+    title: "Boundary Waters Canoe Area"
+    excerpt: "Photos taken over the past 5 years of trips to the BWCA."
+feature_row2:
   - image_path: /assets/images/Lightroom_JPEG_Exports/website-1060632.jpg
     url: /Photography/SJU_Photos
-    btn_label: "Saint John's University"
+    btn_label: "View"
     btn_class: "btn--inverse"
+feature_row3:
   - image_path: /assets/images/Lightroom_JPEG_Exports/website-1070973-2.jpg
     url: /Photography/backyard_jungle
-    btn_label: "backyard jungle"
-    btn_class: "btn--inverse"
+    btn_label: "View"
+    btn_class: "btn--inverse"\
+feature_row4:
   - image_path: /assets/images/Lightroom_JPEG_Exports/mcm1130529.jpg
     url: /Photography/subjectively_objective_final
-    btn_label: "subjectively objective"
+    btn_label: "View"
     btn_class: "btn--inverse"
 ---
 
-**Saint John's University |** This is a series taken on the SJU campus in Collegeville, MN, where I went to undergrad. 
+{% include feature_row type="left" %}
 
+{% include feature_row id="feature_row2" type="right" %}
 
- <a href="https://mcmaurer.github.io/Photography/SJU_hotos"><img src="/assets/images/Lightroom_JPEG_Exports/website-1060632.jpg" width=40%/></a>
+{% include feature_row id="feature_row3" type="left" %}
+
+{% include feature_row id="feature_row4" type="right" %}
 
