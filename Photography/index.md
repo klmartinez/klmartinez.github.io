@@ -22,7 +22,7 @@ feature_row3:
   - image_path: /assets/images/Lightroom_JPEG_Exports/website-1070973-2.jpg
     url: /Photography/backyard_jungle
     btn_label: "View"
-    btn_class: "btn--inverse"\
+    btn_class: "btn--inverse"
 feature_row4:
   - image_path: /assets/images/Lightroom_JPEG_Exports/mcm1130529.jpg
     url: /Photography/subjectively_objective_final
