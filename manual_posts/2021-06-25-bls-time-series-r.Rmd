@@ -1,5 +1,6 @@
 ---
 title: "Working With BLS Time Series Data"
+subtitle: "[Back To Blog Page](https://mcmaurer.github.io/Blog/)"
 author: "Michael Culshaw-Maurer"
 date: "`r format(Sys.time(), '%B %d, %Y')`" 
 output:
