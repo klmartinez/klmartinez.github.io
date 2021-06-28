@@ -14,7 +14,7 @@ My primary area of study is the effects of natural enemy risk in biological cont
 
 ## Pathways of risk in aphid-parasitoid-hyperparasitoid systems
 
-I am currently working on a [USDA NIFA supported project](https://nifa.usda.gov/funding-opportunity/agriculture-and-food-research-initiative-education-workforce-development) using field and lab experiments to study the effects of multiple levels of risk on aphid population growth and alfalfa performance. Parasitoids affect aphids through both consumptive and non-consumptive pathways, but they also suffer their own consumptive and non-consumptive effects due to hyperparasitoids. I hope to elucidate the ways by which each specific pathway cascades to the level of aphid population growth and alfalfa performance, improving understanding of both aphid pest control and the broader topic of multiple risk cascades.
+I recently finished working on a [USDA NIFA supported project](https://nifa.usda.gov/funding-opportunity/agriculture-and-food-research-initiative-education-workforce-development) using field and lab experiments to study the effects of multiple levels of risk on aphid population growth and alfalfa performance. Parasitoids affect aphids through both consumptive and non-consumptive pathways, but they also suffer their own consumptive and non-consumptive effects due to hyperparasitoids. I hope to elucidate the ways by which each specific pathway cascades to the level of aphid population growth and alfalfa performance, improving understanding of both aphid pest control and the broader topic of multiple risk cascades.
 
 ## Disease and cannibalism
 

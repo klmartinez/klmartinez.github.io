@@ -6,7 +6,6 @@ date: "`r format(Sys.time(), '%B %d, %Y')`"
 output:
   tufte::tufte_html:
     tufte_variant: "envisioned"
-
 ---
 
 ```{css, echo=F}
