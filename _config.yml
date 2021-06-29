@@ -278,3 +278,11 @@ defaults:
       comments: # true
       share: true
       related: true
+
+# google analytics
+
+analytics:
+  provider: "google-gtag"
+  google:
+    tracking_id: "G-C16SFBDDNW"
+    anonymize_ip: false # default
