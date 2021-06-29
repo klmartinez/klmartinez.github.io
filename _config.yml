@@ -84,6 +84,14 @@ social:
   name                   : # If the user or organization name differs from the site's name
   links: # An array of links to social media profiles
 
+# # Analytics
+# analytics:
+#   provider               : false # false (default), "google", "google-universal", "google-gtag", "custom"
+#   google:
+#     tracking_id          :
+#     anonymize_ip         : # true, false (default)
+
+
 # Site Author
 author:
   name             : "Michael Culshaw-Maurer"
@@ -274,8 +282,8 @@ defaults:
 # google analytics
 
 analytics:
-  provider: "google-gtag"
+  provider: "google-universal"
   google:
     tracking_id: "UA-200826088-1"
     anonymize_ip: false # default
-    measurement_id: "G-L3XRYLB6WM"
+    #measurement_id: "G-L3XRYLB6WM"
