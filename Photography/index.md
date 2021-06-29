@@ -10,7 +10,7 @@ feature_row:
   - image_path: /assets/images/Lightroom_JPEG_Exports/website-1010488.jpg
     url: /Photography/bwca
     btn_label: "View"
-    btn_class: "btn--primary"
+    btn_class: "btn--primary2"
     title: "Boundary Waters Canoe Area"
     excerpt: "I've been going to the BWCA at least once a year since I was 4. Since getting into photography, it has been one of my favorite places to take photographs. The photos here are from the last 5 years of trips with family and friends."
 feature_row2:
