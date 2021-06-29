@@ -31,7 +31,7 @@ feature_row4:
   - image_path: /assets/images/Lightroom_JPEG_Exports/mcm1130529.jpg
     url: /Photography/subjectively_objective_final
     btn_label: "View"
-    btn_class: "btn--inverse"
+    btn_class: "btn--light-outline"
     title: "Subjectively Objective Submission"
     excerpt: "This is a series of images I submitted to [subjectively objective](https://subjectivelyobjective.com/)'s Investigations in Infrastructure book/gallery project. I think they make for a small but cohesive collection in their own right."
 ---
