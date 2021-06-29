@@ -284,6 +284,6 @@ defaults:
 analytics:
   provider: "google-gtag"
   google:
-    tracking_id: "UA-200826088-1"
+    #tracking_id: "UA-200826088-1"
     anonymize_ip: false # default
     measurement_id: "G-L3XRYLB6WM"
