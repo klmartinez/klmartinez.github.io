@@ -6,6 +6,8 @@ date: "`r format(Sys.time(), '%B %d, %Y')`"
 output:
   tufte::tufte_html:
     tufte_variant: "envisioned"
+    includes:
+      in_header: "../_includes/analytics-providers/google-gtag.html"
 ---
 
 ```{css, echo=F}
