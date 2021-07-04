@@ -32,6 +32,9 @@ Rick Astley's fashion sense is like a classic theoretical paper: timeless. Serio
 
 ```
 
+
+## Writing out the model
+
 First we write a function that calculates an update of the Ricker model, then a function that takes parameter inputs, a starting value, and a number of iterations, and generates values from the Ricker model through time.
 ```{r}
 RickRoll <- function(nt, r, k){
@@ -54,6 +57,8 @@ RickRollIter <- function(r, k, n0, tf){
 
 ```
 
+
+## Setting up and running simulations
 
 Next, we'll set up our basic simulation table, which holds parameters in a nice tidy format. Here we use the same values for `k`, `n0`, and `tf`, but we look at a few different values of `r`.
 ```{r}
@@ -103,6 +108,8 @@ expand_grid(k = c(100, 200, 500),
 ```
 
 
+## Making a bifurcation diagram
+
 Now let's generate a classic logistic map bifurcation diagram, which shows how a discrete deterministic model can generate **C H A O S** as the value of `r` increases. We do almost the same thing as before, but we need a much finer grid of `r` values to make a nice plot.
 
 ```{r, cache=T}
@@ -144,6 +151,8 @@ sim_bif %>%
     palette = "Purple-Yellow")
 ```
 
+
+## Adding the Lyapunov exponent
 
 Next, we'll calculate the Lyapunov exponent, which is a measure of the divergence of two infinitesimally close trajectories^[Quick reminder- I am definitely not a mathematician and should not be held responsible if a mathematician yells at you for repeating any of this]. Chaos in discrete systems can be thought of as an extreme sensitivity to starting conditions. Though we can exactly predict outcomes given an exact starting condition, if we nudge that condition even slightly, then we have NO idea what's going on. So the Lyapunov exponent is a way to figure out if our system is chaotic. A positive Lyapunov exponent is indicative of chaos.
 ```{r}
@@ -199,18 +208,20 @@ py / pb
 
 ```
 
+
+## Thoughts on the `tidy` approach
+
 Well, I achieved my goal of proving to myself that I could translate an old base R homework assignment into a `tidyverse` approach. I think I've convinced myself this list-column tibble approach could be useful for population models, at least relatively simple ones. It's really not all that much translation from a matrix-based approach either. The main steps were turning the `for` loop into the `RickRollIter()` function, and making it generate a 1-dimensional output, since we're only feeding it a single set of parameters at a time.
 
 I think what I like most about this approach is that once you've set up your basic tibble structure, you can just keep building up components. You can can create arbitrarily large combinations of parameter inputs, use multiple models, and do as many calculations as you want, all organized together.
 
+# The need for S P E E D
 
+```{marginfigure}
+![](https://media.giphy.com/media/6HOkD1pSCne4E/source.gif)
+```
 
-
-
-
-# BONUS
-
-Alright, I got a tiny little bit obsessed with the speed of a vectorized, matrix-based approach compared to our tidy `pmap()` approach. There's no doubt that using R's highly optimized matrix and vector operations gives you the fastest simulations, but you don't get some of the benefits of tidiness we've talked about so far.
+After writing the previous sections and dusting my hands off I got a tiny little bit obsessed with the speed of a vectorized, matrix-based approach compared to our tidy `pmap()` approach. There's no doubt that using R's highly optimized matrix and vector operations gives you the fastest simulations, but you don't get some of the benefits of tidiness we've talked about so far.
 
 The primary benefit of a matrix-based approach is that you get to use R's vectorization capabilities. When you start a `for` loop that goes through each time step of your simulation, you can pass a vector of values (`r`, `n`, `k`) to your model function (`RickRoll()` in our case), which will be really fast. Our `pmap()` approach can't do that, because we're only operating on one row of our dataframe at a time. Each row has its own `for` loop generating its time series.
 
@@ -295,4 +306,4 @@ microbenchmark::microbenchmark(
 
 As you can see, the `pmap()` approach is far and away the slowest^[If your model runs take long enough, you can probably benefit from some parallelization. The [furrr](https://furrr.futureverse.org/) packages allows you to drop in parallelized `map` functions, which can provide significant speed increases]. While the straight `for` loop approach is the fastest, it is only 4-5x faster, compared to the orders of magnitude difference with `pmap()`. Additionally, the `for` loop approach only gives us a matrix back, and any slicing and dicing we want to do to get it into a nicer format is going to take a) time to write and b) some computational power.
 
-I think the `RickRollVec()` approach gives you the best of both worlds. One thing to note is that the `RickRollVec()` and `for` loop approaches require you to keep the number of simulation steps constant. The underlying results matrix needs to be square, so you have to use the same number of iterations for every set of parameters. With the `pmap()` approach, you can vary the number of steps as well, since each row uses its own separate `for` loop. As with most things computational, there are some tradeoffs between readability, ease of use, and speed. While it's often tempting to go for the most blazing-fast approach to simulation models, it's worth considering the time you put into implementing that approach and the time needed to clean up the results to make them more workable. Finding the right balance for your workflow and model combination is important, and you may find that some `tidyverse` approaches make sense for you.
+I think the `RickRollVec()` approach gives you the best of both worlds. One thing to note is that the `RickRollVec()` and `for` loop approaches require you to keep the number of simulation steps constant. The underlying results matrix needs to be rectangular, so you have to use the same number of iterations for every set of parameters. With the `pmap()` approach, you can vary the number of steps as well, since each row uses its own separate `for` loop. As with most things computational, there are some tradeoffs between readability, ease of use, and speed. While it's often tempting to go for the most blazing-fast approach to simulation models, it's worth considering the time you put into implementing that approach and the time needed to clean up the results to make them more workable. Finding the right balance for your workflow and model combination is important, and you may find that some `tidyverse` approaches make sense for you.
