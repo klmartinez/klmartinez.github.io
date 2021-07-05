@@ -243,6 +243,7 @@ RickRollVec <- function(r, k, n0, tf) {
 
 ```
 
+
 It's similar to `RickRollIter()`, but it takes entire vectors of input values and creates a matrix to store all the results. Then, it turns that matrix into a list, which can be stored in a list-column. To use it how we've been using it so far, you have to add a couple more steps to the pipeline:
 
 ```{r}
@@ -258,7 +259,12 @@ sim
 
 The drawback to this approach is that the `RickRollVec()` function doesn't give you the time step for each value. I've tried a lot of approaches to getting the time step within the function, but they are all significantly slower than the approach here, which is to use `map()` and `seq_along()` to put the time steps back in. Then we have two list-columns, which we `unnest()`.
 
-You can see that it generates the same outcomes:
+Here's a little diagram showing how the vectorized and `pmap()` approaches differ^[`pmap()` generates many more function calls, leading to an individual `for` loop for each set of parameters. The vectorized approach only uses one `for` loop, and the different parameter values are kept in vectors, allowing the `RickRoll()` function inside the loop to use R's basic vectorized operations. ].
+
+![](../assets/images/ricker_iter_diagram3.png)
+
+
+You can see that the vectorized approach generates the same outcomes as `pmap()` did earlier:
 
 ```{r}
 sim %>% 
@@ -307,3 +313,7 @@ microbenchmark::microbenchmark(
 As you can see, the `pmap()` approach is far and away the slowest^[If your model runs take long enough, you can probably benefit from some parallelization. The [furrr](https://furrr.futureverse.org/) packages allows you to drop in parallelized `map` functions, which can provide significant speed increases]. While the straight `for` loop approach is the fastest, it is only 4-5x faster, compared to the orders of magnitude difference with `pmap()`. Additionally, the `for` loop approach only gives us a matrix back, and any slicing and dicing we want to do to get it into a nicer format is going to take a) time to write and b) some computational power.
 
 I think the `RickRollVec()` approach gives you the best of both worlds. One thing to note is that the `RickRollVec()` and `for` loop approaches require you to keep the number of simulation steps constant. The underlying results matrix needs to be rectangular, so you have to use the same number of iterations for every set of parameters. With the `pmap()` approach, you can vary the number of steps as well, since each row uses its own separate `for` loop. As with most things computational, there are some tradeoffs between readability, ease of use, and speed. While it's often tempting to go for the most blazing-fast approach to simulation models, it's worth considering the time you put into implementing that approach and the time needed to clean up the results to make them more workable. Finding the right balance for your workflow and model combination is important, and you may find that some `tidyverse` approaches make sense for you.
+
+<!-- is there a way to use map() instead of a for loop to map an update function across a state vector? Did I do something like this for a locust ABM at some point? -->
+<!-- hould also look into accumulate() -->
+
