@@ -13,7 +13,6 @@ output:
 ```{r, include=F}
 library(tidyverse)
 library(patchwork)
-library(furrr)
 knitr::opts_chunk$set(fig.fullwidth=TRUE, dpi=300, fig.width=9, fig.height=5)
 ```
 
@@ -66,7 +65,6 @@ sim <- tibble(k = 100,
               n0 = 50,
               tf = 80,
               r = c(1.5,2.3,2.6,3.0))
-sim
 ```
 
 Next, we use the `pmap()` function to operate on each row of our tibble individually. We take the parameter inputs and use the `RickRollIter()` function to generate a time series, which gets stored in a list-column.
@@ -74,6 +72,8 @@ Next, we use the `pmap()` function to operate on each row of our tibble individu
 
 sim <- sim %>% 
   mutate(results = pmap(.l = list(r, k, n0, tf), .f = RickRollIter))
+
+sim
 
 ```
 
@@ -145,7 +145,7 @@ sim_bif %>%
   ggplot(aes(x = r, y = results, color = n_vals)) +
   geom_point(alpha = 0.3, size = 0.5) +
   MCMsBasics::minimal_ggplot_theme() +
-  theme(legend.position = "top") +
+  theme(legend.position = c(0.15, 0.1), legend.direction = "horizontal") +
   ylab("Pop size") +
   colorspace::scale_color_continuous_sequential(
     palette = "Purple-Yellow")
@@ -156,15 +156,18 @@ sim_bif %>%
 
 Next, we'll calculate the Lyapunov exponent, which is a measure of the divergence of two infinitesimally close trajectories^[Quick reminder- I am definitely not a mathematician and should not be held responsible if a mathematician yells at you for repeating any of this]. Chaos in discrete systems can be thought of as an extreme sensitivity to starting conditions. Though we can exactly predict outcomes given an exact starting condition, if we nudge that condition even slightly, then we have NO idea what's going on. So the Lyapunov exponent is a way to figure out if our system is chaotic. A positive Lyapunov exponent is indicative of chaos.
 ```{r}
-f=function(r,x)x*exp(r*(1-x)) # function for Ricker
-fp=function(r,x)exp(r*(1-x))*(1-r*x) # function for derivative of Ricker
+# function for Ricker
+f <- function(r, x) x * exp(r * (1 - x))
+
+# function for derivative of Ricker
+fp <- function(r, x) exp(r * (1 - x)) * (1 - r * x) 
 
 get_lyap <- function(n0, r, tf){
   n <- n0
   lyap <- 0
   for(t in 1:tf){
     n <- f(r, n)
-    lyap <- lyap + log(abs(fp(r,n)))
+    lyap <- lyap + log(abs(fp(r, n)))
   }
   lyap <- lyap/tf
   return(lyap)
@@ -310,7 +313,7 @@ microbenchmark::microbenchmark(
 )
 ```
 
-As you can see, the `pmap()` approach is far and away the slowest^[If your model runs take long enough, you can probably benefit from some parallelization. The [furrr](https://furrr.futureverse.org/) packages allows you to drop in parallelized `map` functions, which can provide significant speed increases]. While the straight `for` loop approach is the fastest, it is only 4-5x faster, compared to the orders of magnitude difference with `pmap()`. Additionally, the `for` loop approach only gives us a matrix back, and any slicing and dicing we want to do to get it into a nicer format is going to take a) time to write and b) some computational power.
+As you can see, the `pmap()` approach is far and away the slowest^[If your model runs take long enough, you can probably benefit from some parallelization. The [furrr package](https://furrr.futureverse.org/) allows you to drop in parallelized `map` functions, which can provide significant speed increases]. While the straight `for` loop approach is the fastest, it is only 4-5x faster, compared to the orders of magnitude difference with `pmap()`. Additionally, the `for` loop approach only gives us a matrix back, and any slicing and dicing we want to do to get it into a nicer format is going to take a) time to write and b) some computational power.
 
 I think the `RickRollVec()` approach gives you the best of both worlds. One thing to note is that the `RickRollVec()` and `for` loop approaches require you to keep the number of simulation steps constant. The underlying results matrix needs to be rectangular, so you have to use the same number of iterations for every set of parameters. With the `pmap()` approach, you can vary the number of steps as well, since each row uses its own separate `for` loop. As with most things computational, there are some tradeoffs between readability, ease of use, and speed. While it's often tempting to go for the most blazing-fast approach to simulation models, it's worth considering the time you put into implementing that approach and the time needed to clean up the results to make them more workable. Finding the right balance for your workflow and model combination is important, and you may find that some `tidyverse` approaches make sense for you.
 
