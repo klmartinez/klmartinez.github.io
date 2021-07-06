@@ -37,8 +37,7 @@ Rick Astley's fashion sense is like a classic theoretical paper: timeless. Serio
 First we write a function that calculates an update of the Ricker model, then a function that takes parameter inputs, a starting value, and a number of iterations, and generates values from the Ricker model through time.
 ```{r}
 RickRoll <- function(nt, r, k){
-  nt1 <- nt * exp(r * (1-nt / k))
-  return(nt1)
+  nt * exp(r * (1-nt / k))
 }
 
 RickRollIter <- function(r, k, n0, tf){
