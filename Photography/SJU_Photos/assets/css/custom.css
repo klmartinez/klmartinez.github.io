@@ -1,21 +1,21 @@
 html {
-  background-color: #FFFFFF !important;
+  background-color: #F7F7F7 !important;
   color: inherit;
 }
 
 .thumb-img {
   box-shadow: 0 0 2px 1px rgba(255, 255, 255, .15) !important;
   border-color: #FFFFFF !important;
-  border-width: 0.00 !important;
+  border-width: 2px !important;
 }
 
 #loupeContainer div.background {
-  background-color: #FFFFFF !important;
+  background-color: #F7F7F7 !important;
   color: inherit;
 }
 
 header div.background {
-  background-color: #FFFFFF !important;
+  background-color: #F7F7F7 !important;
   color: inherit;
 }
 
@@ -24,6 +24,6 @@ header div.background {
 }
 
 body {
-  background-color: #FFFFFF !important;
+  background-color: #F7F7F7 !important;
   color: #404040 !important;
 }
