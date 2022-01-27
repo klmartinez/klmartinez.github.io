@@ -1,0 +1,222 @@
+---
+title: "Converting a big CSV to SQLite"
+subtitle: "[Back To Blog Page](https://mcmaurer.github.io/Blog/)"
+author: "Michael Culshaw-Maurer"
+date: "`r format(Sys.time(), '%B %d, %Y')`" 
+output:
+  tufte::tufte_html:
+    tufte_variant: "envisioned"
+    includes:
+      in_header: "../_includes/analytics-providers/google-gtag.html"
+---
+
+```{r, include=F}
+library(tidyverse)
+knitr::opts_chunk$set(fig.fullwidth=TRUE, dpi=300, fig.width=7, fig.height=3.5, eval = F)
+```
+
+```{marginfigure}
+![](../assets/images/sql_r_meme.jpeg)
+```
+
+Like many R users, I've primarily worked with tabular datasets that can fit into R's working memory. All the skills you use pretty much apply equally to your data, regardless of size. However, once you hit the point where your data are too big to fit into R's working memory, you often hit a bit of a cliff. Suddenly you are faced with a whole new world of databases and SQL and "big data" tools. However, a lot of datasets don't really require more than a minimal SQL database, and with the advent of [`dbplyr`](https://dbplyr.tidyverse.org/), you can use `tidyverse` functions on database connections. I've used this approach on several occasions, and it is really slick.
+
+However, one of the issues you might face is how to get your tabular data, probably in the form of a massive CSV file, into the SQL database. I recently had someone ask about how you would do this, and I realized I had never actually converted a single big CSV into a database. You can't just read the data into R and then send it into the database, since the CSV is too big to read into R at once. You could try to manually split up the CSV, but that's quite annoying. A smart approach is to read the CSV into R in chunks, and sequentially write each chunk to the SQL database. Doing some quick searching, there are lots of resources on working with SQL databases in R, but not a whole lot on solving the problem I just described.
+
+I will walk through approaches to convert CSV files into tables in SQLite databases, for cases where you have a single huge CSV or multiple smaller CSVs. It will also serve as a basic demo for using a local SQLite database in R with `dbplyr`.
+
+First up, let's load our required packages.
+
+```{r, eval=T, message=F}
+library(tidyverse)
+library(DBI)
+library(RSQLite)
+library(here)
+library(vroom)
+```
+
+We will be using a bunch of diffrent `tidyverse` functions, the `DBI` package to work with our database, `RSQLite` to create an SQLite database, `here` for relative file paths, and `vroom` to do some testing to ensure that our CSV and SQL tables are similar. 
+
+I'll be working with a directory called `example_data/`, so if you want to follow along, make sure you have a matching folder wherever you are working.
+
+## One big CSV
+
+We will be working with `dplyr`'s [`storms`](https://dplyr.tidyverse.org/reference/storms.html) data. It's only 10,010 rows, not nearly big enough that it wouldn't fit in R's working memory, but for the sake of this demonstration, it will do just fine. If you want to actually use a huge CSV file, go right ahead.
+
+```{r}
+write_csv(storms, here("example_data", "storms.csv"))
+```
+
+Next thing we will do is create/connect to our SQLite database. SQLite a pretty minimal type of SQL database that only has a single file, so it's nice for our relatively straightforward use case of just getting our data out of R's working memory.
+
+The following code will connect to a database at the path `"example_data/storms.sqlite3"`. If this file doesn't exist yet, it will be automatically generated.
+
+```{r, eval=T, echo=T, include=T}
+mydb <- dbConnect(SQLite(), here("example_data", "storms.sqlite3"))
+```
+
+Next thing we need to do is read our CSV into R and then write it to a table in the SQLite database. Since we want to do this for CSVs that are too big to fit in R's working memory, we will read the CSV in chunks. The `read_csv_chunked()` function allows us to do this. We have to give it the path to our CSV, a function to run on each chunk (the `callback` argument), the maximum number of rows per chunk, and a specification of column types^[SQL can't store factors, and the `storms` data has "category" as a factor. However, the values are actually numbers, so I put them down as integers in this specification string. So when they are read from the CSV, they are treated as integers, and copied to the database as integers.]. It is important to specify column types when doing this, because of the way `readr` guesses column types. Typically, `readr` will read a certain number of values in a column and then guess the type. However, `readr` only has access to our data one chunk at a time, so it might guess different column types for the same column across different chunks. Specifying columns explicitly is always a safer approach.
+
+We will define an anonymous function inside our `read_csv_chunked()` call. The first argument is the CSV chunk, and the second argument is just a dummy argument, which `read_csv_chunked()` requires (not entirely sure why). Our anonymous callback function will access our database connection with `mydb`, make a table inside it called `"storms"`, and then append our CSV chunk to that table. By doing this to each sequential chunk, we end up transferring the whole CSV file into the `"storms"` table, without ever having the whole CSV in memory.
+
+```{r}
+read_csv_chunked(here("example_data", "storms.csv"), 
+                 callback = function(chunk, dummy){
+      dbWriteTable(mydb, "storms", chunk, append = T)}, 
+      chunk_size = 1000, col_types = "cddidddciiidd")
+```
+
+I've chosen a chunk size of 1000 lines, which is really only for demonstration purposes. For a big CSV you will certainly want to increase this. The exact size will depend on the number of rows and columns in your CSV, so you might have to tinker a little bit.
+
+At this point, our SQLite database should contain a `"storms"` table that has everything from the CSV in it. Now we can use the `tbl()` function to generate a connection to that table, which will behave similarly to a normal data.frame.
+
+```{r}
+stormsdb <- tbl(mydb, "storms")
+
+stormsdb %>% 
+  filter(year == 1980)
+
+stormsdb %>% 
+  filter(year == 1980) %>% 
+  collect()
+```
+
+This isn't a full `dbplyr` tutorial, but the basic idea is that you can take that `stormsdb` object and run various `tidyverse` functions on it. These get translated into SQL queries that will return the data you want. However, the queries are lazy, meaning not all the matching rows are returned until you ask for them. This is good, since what gets returned might be too big to fit into memory. You can use the `collect()` function to actually read the data into R, generating a `tibble` object to work with.
+
+## Many small CSVs
+
+If you have a bunch of smaller CSVs that you want to put into one big SQL table, the process is slightly different. First we'll generate a CSV file for each year in the `storms` data^[How exactly I'm doing this isn't very important for this particular lesson, but the basic idea is to create a nested tibble with a year column and a data column. Then we use `pwalk()` to write a CSV for each row, using the data column as the CSV contents and the year column as part of the filename].
+
+```{r}
+dir.create(here("example_data", "storms_by_year"))
+
+storms %>% 
+  group_by(year) %>% 
+  nest() %>% 
+  pwalk(function(year, data){
+    write_csv(x = data, file = paste0(
+      here("example_data", "storms_by_year", "storms_"), 
+      year, ".csv"))})
+```
+
+We will assume that each individual CSV is big enough to fit into memory, and that the issue is how big they would all be when combined into one data.frame. So instead of reading one big CSV in chunks, we're reading each CSV and immediately writing it to the SQLite database, so only one CSV is ever in memory at one time.
+
+```{r, eval=T, echo=T, include=T}
+mydb2 <- dbConnect(SQLite(), here("example_data", "storms_many.sqlite3"))
+```
+
+Here we define a function that does a couple things. First, it extracts the year value from the filename, since that data is only stored in the filename. It's not uncommon for the filename to have some data associated with it when you're working with many files. Then we read in the CSVs, defining our column types^[In this case, we only have 12 columns when the CSVs are first read in, rather than the 13 in the `storms` data, because the year value got stripped out and put into the file names.], and then re-adding the year value into a new column. Finally, the dataframe is appended to the `"storms"` table in our database.
+
+```{r}
+add_csv_db <- function(path, db){
+  
+  year <- basename(path) %>% 
+    str_remove("storms_") %>% 
+    str_remove(".csv") %>% 
+    as.numeric()
+  
+  d <- read_csv(path, col_types = "cdddddcidddd") %>%
+    mutate(year = year)
+  
+  dbWriteTable(db, "storms", d, append = T)
+}
+```
+
+Now we get a list of file paths to our individual CSVs, and then use the `walk` function to run our `add_csv_db()` function on each file. `walk` is like `map`, but when you only care about the side effects of a function. Our function doesn't return anything, we only care about the side effect of writing the data to the database.
+
+```{r, eval=T, echo=T, include=T}
+csv_names <- list.files(here("example_data", "storms_by_year"))
+
+csv_paths <- here("example_data", "storms_by_year", csv_names)
+```
+
+```{r}
+walk(csv_paths, add_csv_db, db = mydb2)
+```
+
+```{r}
+tbl(mydb2, "storms") %>% 
+  collect()
+```
+
+## Many big CSVs
+
+I was going to describe a way to combine the two approaches if you need to combine a bunch of CSVs that are too big to fit into memory, but honestly, it felt a little silly. If you are working with multiple CSVs that are too big to fit into memory, you should probably look into other, more sophisticated database approaches. SQLite databases all fit into one file, which is convenient if they aren't too large or complex, but once you get into the realm of truly big data, it's probably worth investing a bit of time into a more robust approach.
+
+## Checking the number of rows
+
+One of the issues with generating our SQL database is that we are **appending** the chunks to our `"storms"` table. If you run the line of code with `read_csv_chunked()` again, it will repeat the process, appending the contents of the CSV to the `"storms"` table, giving you a duplicated table and a bigger `.sqlite3` file. Plus, since nothing actually went wrong, you won't get an error.
+
+If you have already done this, don't worry. You can delete the `storms.sqlite3` file and just run all the code again to regenerate the database. For the future, it would be nice to verify that our CSV and `"storms"` table match each other, and ensure that the code doesn't run again if they have the same number of rows already.
+
+First, we'll use `vroom` to read the number of lines in our CSV, subtracting 1 for the header.
+
+```{r, eval=T, echo=T, include=T}
+nrow_csv <- length(vroom_lines(
+  here("example_data", "storms.csv"), progress = FALSE)) - 1L
+```
+
+Next we want to read the number of lines in our `"storms"` table.
+
+```{r, eval=T, echo=T, include=T}
+nrow_db <- tbl(mydb, "storms") %>% summarise(n = n()) %>% collect() %>% pull(n)
+```
+
+Finally, we can compare the number of rows to ensure that they match.
+
+```{r, eval=T, echo=T, include=T}
+nrow_csv == nrow_db
+```
+
+We might want to consider the case where something goes wrong, and only part of our CSV was written to the database, or part of the CSV was duplicated. So we want to run the `run_csv_chunked()` code only if the `"storms"` table is empty, but we want to know if something went wrong and the table isn't empty, but it has the wrong number of rows^[This method of checking whether our CSV and SQL table match is quite minimal and not very robust. It's a good first pass, but in general, you probably want to do more thorough checks, like running summary stats on each column and comparing them. Data validation of this sort is a topic unto iself.].
+
+Another little issue that comes up here is that if our SQLite database is empty, `tbl()` will tell us the `"storms"` table doesn't exist, so the following code will return an error instead of a value of 0:
+
+```{r}
+nrow_db <- tbl(mydb, "storms") %>% summarise(n = n()) %>% collect() %>% pull(n)
+```
+
+To solve this, we can use the `possibly()` function from `purrr`. It allows you to generate a version of an existing function that will return a default value if there is an error. We will make a version of `tbl()` that returns an empty data.frame if there is an error, which will lead to a calculation of 0 rows.
+
+```{r}
+tbl_p <- possibly(tbl, otherwise = data.frame())
+
+nrow_db <- tbl_p(mydb, "storms") %>% summarise(n = n()) %>% collect() %>% pull(n)
+```
+
+Finally, we have correct values for the number of rows in our SQLite `"storms"` table and our CSV, and we can run our code to generate the `"storms"` table appropriately:
+
+```{r}
+if(nrow_db != 0 & nrow_db != nrow_csv){
+  stop("DB not empty, but the number of rows does not match the CSV.")
+} else {
+  if(nrow_db == 0){
+    read_csv_chunked(here("example_data", "storms.csv"), 
+                     callback = function(chunk, dummy){
+      dbWriteTable(mydb, "storms", chunk, append = T)}, 
+      chunk_size = 1000)
+  }
+}
+```
+
+This will first alert us if the `"storms"` table isn't empty but has the wrong number of rows. Then, if the table **is** empty, it will use `read_csv_chunked()` to populate the table with the data from our CSV.
+
+The process of checking the number of rows is similar for our "many smaller CSVs" case, but we need to check the rows of every CSV and add them together. We can use `map_dbl()` to apply our length-checker to every CSV, giving us a numeric vector that we then take the sum of.
+
+```{r, eval=T, echo=T, include=T}
+nrow_csv_many <- map_dbl(csv_paths, 
+        ~length(vroom_lines(.x, progress = FALSE)) - 1L) %>% 
+  sum()
+
+nrow_db2 <- tbl(mydb2, "storms") %>% 
+  summarise(n = n()) %>% 
+  collect() %>% 
+  pull(n)
+
+nrow_csv_many == nrow_db2
+nrow_db == nrow_db2
+```
+
+## Conclusion
+
+This ended up being slightly more involved than I had anticipated, but I think it still solves a problem I could imagine more than a few people coming across. The cliff when you hit data that are too big for R's memory can be daunting, so hopefully this will help ease the plunge.
