@@ -1,0 +1,7 @@
+---
+title: "Test"
+output:
+  tufte::tufte_html
+---
+
+Here is some text^[This should be a sidenote].
