@@ -10,9 +10,17 @@ output:
       in_header: "../_includes/analytics-providers/google-gtag.html"
 ---
 
+```{css, echo=F}
+.codeChunk {
+background-color: rgb(247, 247, 247);
+border: 10px solid rgb(247, 247, 247);
+border-radius: 4px
+}
+```
+
 ```{r, include=F}
 library(tidyverse)
-knitr::opts_chunk$set(fig.fullwidth=TRUE, dpi=300, fig.width=7, fig.height=3.5, eval = F)
+knitr::opts_chunk$set(fig.fullwidth=TRUE, dpi=300, fig.width=7, fig.height=3.5, eval = F, class.source = "codeChunk")
 ```
 
 ```{marginfigure}
@@ -27,7 +35,7 @@ I will walk through approaches to convert CSV files into tables in SQLite databa
 
 First up, let's load our required packages.
 
-```{r, eval=T, message=F}
+```{r packages, eval=T, message=F}
 library(tidyverse)
 library(DBI)
 library(RSQLite)

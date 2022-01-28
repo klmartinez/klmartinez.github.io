@@ -10,10 +10,18 @@ output:
       in_header: "../_includes/analytics-providers/google-gtag.html"
 ---
 
+```{css, echo=F}
+.codeChunk {
+background-color: rgb(247, 247, 247);
+border: 10px solid rgb(247, 247, 247);
+border-radius: 4px
+}
+```
+
 ```{r, include=F}
 library(tidyverse)
 library(patchwork)
-knitr::opts_chunk$set(fig.fullwidth=TRUE, dpi=300, fig.width=9, fig.height=5)
+knitr::opts_chunk$set(fig.fullwidth=TRUE, dpi=300, fig.width=9, fig.height=5, class.source = "codeChunk")
 ```
 
 My 2nd year of grad school I took a fantastic course called Computational Methods in Population Biology (ECL 233), taught by my one of my co-advisors, [Sebastian Schreiber](https://schreiber.faculty.ucdavis.edu/deep/) and one of my QE committee members, [Marissa Baskett](http://www.des.ucdavis.edu/faculty/baskett/). The course was pretty evenly split between ecologists and applied math students, and focused on pretty applied mathematical modeling concepts. As a quantitative ecologist with relatively sparse formal mathematical training, but pretty solid computational/R skills, this course was incredible. Being able to implement models in R meant I could poke and prod the models, changing parameters or investigating intermediate values. This helped me translate the more formal mathematical models into data I could work with like any other. [Richard McElreath](https://xcelab.net/rm/) notes this pedagogical benefit in posterior distribution sampling in Bayesian statistics in his fantastic book, [Statistical Rethinking](https://xcelab.net/rm/statistical-rethinking/)^[I'm not usually one to fawn over academic stuff, but Statistical Rethinking absolutely changed the way I think. Not only did it give me a deep appreciation and intuition for Bayesian data analysis, but it is an absolute pedagogical marvel. If you haven't read it yet, run, don't walk, to grab a copy.].
