@@ -13,9 +13,11 @@ $paragraph-indent: false !default; // true, false (default)
 $indent-var: 1.3em !default;
 
 /* system typefaces */
-$serif: "Lora", Georgia, Times, serif !default;
-$sans-serif: "Roboto", -apple-system, BlinkMacSystemFont, "Lato", "Segoe UI",
-  "Helvetica Neue", "Lucida Grande", Arial, sans-serif !default;
+//$serif: "Lora", Georgia, Times, serif !default;
+$serif: Lora, serif !default;
+$sans-serif: Roboto, -apple-system, BlinkMacSystemFont, sans-serif !default;
+//$sans-serif: "Roboto", -apple-system, BlinkMacSystemFont, "Lato", "Segoe UI",
+  //"Helvetica Neue", "Lucida Grande", Arial, sans-serif !default;
 $monospace: "Source Code Pro", Monaco, Consolas, "Lucida Console", monospace !default;
 
 /* sans serif typefaces */
@@ -29,9 +31,8 @@ $bodoni: "Bodoni MT", serif !default;
 $calisto: "Calisto MT", serif !default;
 $garamond: Garamond, serif !default;
 
-//$global-font-family: $sans-serif !default;
+$global-font-family: $sans-serif !default;
 //$global-font-family: 'Roboto', sans-serif;
-$global-font-family: "Roboto";
 $header-font-family: $sans-serif !default;
 $caption-font-family: $serif !default;
 
