@@ -32,3 +32,7 @@ I was a TA for the UC Davis BIS 2B course for several years. This position invol
 ## Geospatial Data Carpentry Workshop
 
 ## NEON Breakout Session - Open Science with CyVerse
+
+## Foundational Open Science Skills - University of Arizona
+
+## Working with Bureau of Labor Statistics Data in R
