@@ -18,6 +18,7 @@ $serif: "Playfair Display", serif !default;
 $sans-serif: "Open Sans", -apple-system, BlinkMacSystemFont, sans-serif !default;
 //$sans-serif: "Roboto", -apple-system, BlinkMacSystemFont, "Lato", "Segoe UI",
   //"Helvetica Neue", "Lucida Grande", Arial, sans-serif !default;
+$sans-serif-black: "Archivo Black", sans-serif !default;
 $monospace: "Source Code Pro", Monaco, Consolas, "Lucida Console", monospace !default;
 
 /* sans serif typefaces */
@@ -33,7 +34,7 @@ $garamond: Garamond, serif !default;
 
 $global-font-family: $sans-serif !default;
 //$global-font-family: 'Roboto', sans-serif;
-$header-font-family: $serif !default;
+$header-font-family: $sans-serif-black !default;
 $caption-font-family: $serif !default;
 
 /* type scale */
