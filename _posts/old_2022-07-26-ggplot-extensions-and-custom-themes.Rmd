@@ -1,6 +1,5 @@
 ---
-title: "Making a pretty ggplot"
-subtitle: "Using custom themes and several extension packages"
+title: "Pretty ggplots with custom themes, ggtext, and ggh4x"
 output:
   md_document:
     variant: gfm
@@ -10,7 +9,8 @@ toc: true
 
 (delete this)`---
 toc: true
-excerpt: "Building a custom ggplot2 theme and making it pretty with a few useful extensions."
+title: "Pretty ggplots with custom themes, ggtext, and ggh4x"
+excerpt: "A quick dissection of a plot I'm pretty proud of."
 ---`(delete this)
 
 ```{r opts, echo = FALSE, warning=F, message=F}
@@ -233,9 +233,7 @@ strip = strip_nested(text_x =
 ```
 
 
-To make the names `Cut` and `Clarity` stand out a little bit, I'd like change their text to a heavier font. However, they are just `strip` labels, treated the same as the actual facet labels like `Fair` and `Good`. We can use `strip_nested()` to set the formatting for each strip label. Since the first label is `Cut` or `Clarity`, I adjust the first strip labels, and then use `rep(NA, 100)` to say "all the other strips should be the default". This function uses vector recycling, so 
-using 100 `NA`s is just to ensure that all the rest of the facets get 
-an `NA`, as long as there aren't more than 100 facets...
+To make the names `Cut` and `Clarity` stand out a little bit, I'd like change their text to a heavier font. However, they are just `strip` labels, treated the same as the actual facet labels like `Fair` and `Good`. We can use `strip_nested()` to set the formatting for each strip label. Since the first label is `Cut` or `Clarity`, I adjust the first strip labels, and then use `rep(NA, 100)` to say "all the other strips should be the default". This function uses vector recycling, so using 100 `NA`s is just to ensure that all the rest of the facets get an `NA`, as long as there aren't more than 100 facets...
 
 ### `guide_stringlegend()`
 

@@ -1,8 +1,7 @@
 ---
 toc: true
-title: "Making a pretty ggplot"
-subtitle: "Using custom themes and several extension packages"
-excerpt: "Building a custom ggplot2 theme and making a pretty plot with a few useful extensions."
+title: "Pretty ggplots with custom themes, ggtext, and ggh4x"
+excerpt: "A quick dissection of a plot I'm pretty proud of."
 ---
 
 # Intro
@@ -221,8 +220,8 @@ Rudis’ custom themes](https://github.com/hrbrmstr/hrbrthemes).
 
 You may notice that inside `theme_mcm_dark()`, there are a bunch of
 `element_markdown()` calls. These come from the wonderful [`ggtext`
-package](https://wilkelab.org/ggtext/index.html), and they replace
-the standard `element_text()` with text that has fuller Markdown
+package](https://wilkelab.org/ggtext/index.html), and they replace the
+standard `element_text()` with text that has fuller Markdown
 capabilities. This is how I did stuff like use a CSS `<span>` to change
 the colors and fonts of text in the plot subtitle. Your text strings may
 get a bit bulky, but it’s super powerful.
@@ -303,9 +302,9 @@ labels, treated the same as the actual facet labels like `Fair` and
 `Good`. We can use `strip_nested()` to set the formatting for each strip
 label. Since the first label is `Cut` or `Clarity`, I adjust the first
 strip labels, and then use `rep(NA, 100)` to say “all the other strips
-should be the default”. This function uses vector recycling, so 
-using 100 `NA`s is just to ensure that all the rest of the facets get 
-an `NA`, as long as there aren't more than 100 facets...
+should be the default”. This function uses vector recycling, so using
+100 `NA`s is just to ensure that all the rest of the facets get an `NA`,
+as long as there aren’t more than 100 facets…
 
 ### `guide_stringlegend()`
 
