@@ -80,7 +80,7 @@ p <- diamonds %>%
     y = list(
       clarity == "I1" ~ scale_y_continuous(limits = range(diamonds$price), 
                                            labels = scales::label_dollar()),
-      cut != "I1" ~ scale_y_continuous(limits = range(diamonds$price), 
+      clarity != "I1" ~ scale_y_continuous(limits = range(diamonds$price), 
                                          labels = NULL)
     )
   ) +
