@@ -1,7 +1,10 @@
 ---
 toc: true
+toc_sticky: true
 title: "Pretty ggplots with custom themes, ggtext, and ggh4x"
 excerpt: "A quick dissection of a plot I'm pretty proud of."
+layout: single
+classes: wide2
 ---
 
 # Intro
