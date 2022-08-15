@@ -278,8 +278,7 @@ You can use `label_both()` to generate something like `Cut: Fair`,
 `Cut: Good`, and so on, but that’s a lot of redundant text. I far prefer
 to put `Cut` once, above all the facets.
 
-The function `facet_nested()` is designed to allow nested facets, like
-nesting facets for cities within states, but we can use it as a hack-ish
+The function `facet_nested()` allows you to do stuff like nest facets for cities within states, but we can also use it as a hack-ish
 way to put `Cut` and `Clarity` above their respective facets. We make
 dummy variables called `cutname` and `clarityname`, then use those
 variables inside `facet_nested()`.
@@ -305,9 +304,7 @@ labels, treated the same as the actual facet labels like `Fair` and
 `Good`. We can use `strip_nested()` to set the formatting for each strip
 label. Since the first label is `Cut` or `Clarity`, I adjust the first
 strip labels, and then use `rep(NA, 100)` to say “all the other strips
-should be the default”. This function uses vector recycling, so using
-100 `NA`s is just to ensure that all the rest of the facets get an `NA`,
-as long as there aren’t more than 100 facets…
+should be the default”. 
 
 ### `guide_stringlegend()`
 
