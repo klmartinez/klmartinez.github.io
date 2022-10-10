@@ -71,7 +71,7 @@ naver_site_verification  :
 
 # Social Sharing
 twitter:
-  username               : "MCulshawMaurer"
+  username               : 
 facebook:
   username               :
   app_id                 :
@@ -96,47 +96,47 @@ social:
 author:
   name             : "Michael Culshaw-Maurer"
   avatar           : # path of avatar image, e.g. "/assets/images/bio-photo.jpg"
-  bio              : "I am a behavioral ecologist and data science educator."
-  location         : "Davis, CA"
+  bio              : "I am a postdoctoral research associate researching pharmacogenomics."
+  location         : "Tucson, AZ"
   email            :
   links:
     - label: "Email"
       icon: "fas fa-fw fa-envelope-square"
-      # url: "mailto:your.name@email.com"
+      url: "kianalee@arizona.edu"
     - label: "Website"
       icon: "fas fa-fw fa-link"
-      url: "https://mcmaurer.github.io"
+      url: "https://klmartinez.github.io"
     - label: "Twitter"
       icon: "fab fa-fw fa-twitter-square"
-      url: "https://twitter.com/MCulshawMaurer"
+      # url: "https://twitter.com/MCulshawMaurer"
     #- label: "Facebook"
      # icon: "fab fa-fw fa-facebook-square"
       # url: "https://facebook.com/"
     - label: "GitHub"
       icon: "fab fa-fw fa-github"
-      url: "https://github.com/mcmaurer"
-    - label: "Instagram"
-      icon: "fab fa-fw fa-instagram"
-      url: "https://instagram.com/mc_maurer"
+      url: "https://github.com/klmartinez"
+    #- label: "Instagram"
+     # icon: "fab fa-fw fa-instagram"
+      # url: "https://instagram.com/mc_maurer"
 
 # Site Footer
 footer:
   links:
     - label: "Email"
       icon: "fas fa-fw fa-envelope-square"
-      url: "https://mcmaurer.github.io/Email_Me/"
+      url: "kianalee@arizona.edu"
     - label: "Twitter"
       icon: "fab fa-fw fa-twitter-square"
-      url: "https://twitter.com/MCulshawMaurer"
+      # url: "https://twitter.com/MCulshawMaurer"
     #- label: "Facebook"
      # icon: "fab fa-fw fa-facebook-square"
       # url: "https://facebook.com/"
     - label: "GitHub"
       icon: "fab fa-fw fa-github"
-      url: "https://github.com/mcmaurer"
-    - label: "Instagram"
-      icon: "fab fa-fw fa-instagram"
-      url: "https://instagram.com/mc_maurer"
+      url: "https://github.com/klmartinez"
+    # - label: "Instagram"
+      # icon: "fab fa-fw fa-instagram"
+      # url: "https://instagram.com/mc_maurer"
 
 
 # Reading Files
