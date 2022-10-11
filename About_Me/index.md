@@ -9,7 +9,7 @@ header:
 ---
 My name is Kiana Lee Martinez. I am a Postdoctoral Research Associate in the [Karnes Lab](https://karneslab.org/) at the University of Arizona. Under the umbrella of [precision medicine]( https://www.cdc.gov/genomics/about/precision_med.htm) and [pharmacogenomics]( https://www.cdc.gov/genomics/disease/pharma.htm), the goal of the Karnes Lab is to use genetics to advance drug therapy by improving efficacy and reducing adverse effects. My research interests include identifying genetic factors that underlie complex diseases and adverse drug reactions particularly in underrepresented populations. Currently, my research primarily focuses on using large genomic datasets to identify genetic variants that are associated with complex disease and adverse drug reactions, often by employing genome-wide association study (GWAS) methods, in diverse and admixed cohorts. 
 
-![image-center](/assets/images/aboutme-pic.jpg){: .align-right}
+![image-center](/assets/images/aboutme-pic-resized.jpg){: .align-right}
 
 A geneticist by training, I received my PhD from the Genetics Graduate Interdisciplinary Program at the University of Arizona, advised by [Christina Laukaitis, MD, PhD](https://medicine.illinois.edu/about/directory/faculty/profile/laukaiti) where I focused on identifying genetic risk factors associated with the hypermobile subtype of Ehler-Danlos Syndrome (hEDS). During my graduate experience I developed an interested in bioinformatics and data science. 
 
