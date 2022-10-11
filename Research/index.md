@@ -9,7 +9,7 @@ header:
   overlay_image: /assets/images/national-cancer-institute-zz_3tCcrk7o-unsplash.jpg
 ---
 
-As part of an innovative lab, I am involved in many projects, but my primary research interests include identifying genetic factors that underlie complex diseases and adverse drug reactions particularly in underrepresented populations.
+### As part of an innovative lab, I am involved in many projects, but my primary research interests include identifying genetic factors that underlie complex diseases and adverse drug reactions particularly in underrepresented populations.
 
 ## Prediction and treatment of heparin-induced thrombocytopenia (HIT)
 Despite the widespread use of heparin and the high mortality associated with HIT, clinicians are not able to predict those patients who will develop this severe adverse drug reaction. I have experience in association analysis identifying genomic associations with HIT as well as creating imputation pipelines to utilize the Trans-Omics for Precision Medicine (TOPMed) program to better inform these studies. TOPMed, sponsored by the National Institutes of Health (NIH) National Heart, Lung and Blood Institute (NHLBI), is part of a broader Precision Medicine Initiative, which aims to provide disease treatments tailored to an individual’s unique genes and environment. I have experience using this large and diverse reference population provided for imputation purposes for our array data in relation to HIT studies. By providing genomic predictors of HIT, I have worked towards establishing new knowledge of HIT and providing potential genomics predictors that might be translated into clinical care.
