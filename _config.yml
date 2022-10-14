@@ -121,7 +121,10 @@ author:
     - label: "ORCiD"
       icon: "fa-brands fa-orcid"
       url: "https://orcid.org/my-orcid?orcid=0000-0001-9209-5139"
-
+    - label: "Google Scholar"
+      icon: "fas fa-fw fa-graduation-cap"
+      url: "https://scholar.google.com/citations?user=NVsnpkkAAAAJ&hl=en"
+      
 # Site Footer
 footer:
   links:
@@ -143,6 +146,9 @@ footer:
     - label: "ORCiD"
       icon: "fa-brands fa-orcid"
       url: "https://orcid.org/my-orcid?orcid=0000-0001-9209-5139"
+    - label: "Google Scholar"
+      icon: "fas fa-fw fa-graduation-cap"
+      url: "https://scholar.google.com/citations?user=NVsnpkkAAAAJ&hl=en"
 
 
 # Reading Files
