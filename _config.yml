@@ -118,6 +118,9 @@ author:
     #- label: "Instagram"
      # icon: "fab fa-fw fa-instagram"
       # url: "https://instagram.com/mc_maurer"
+    - label: "ORCiD"
+      icon: "fa-brands fa-orcid"
+      url: "https://orcid.org/my-orcid?orcid=0000-0001-9209-5139"
 
 # Site Footer
 footer:
@@ -137,6 +140,9 @@ footer:
     # - label: "Instagram"
       # icon: "fab fa-fw fa-instagram"
       # url: "https://instagram.com/mc_maurer"
+    - label: "ORCiD"
+      icon: "fa-brands fa-orcid"
+      url: "https://orcid.org/my-orcid?orcid=0000-0001-9209-5139"
 
 
 # Reading Files
