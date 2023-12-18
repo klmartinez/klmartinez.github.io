@@ -18,7 +18,7 @@ minimal_mistakes_skin    : "default" # "air", "aqua", "contrast", "dark", "dirt"
 locale                   : "en-US"
 title                    : "Kiana Lee Martinez"
 title_separator          : "|"
-subtitle                 : "Postdoctoral Research Associate"
+subtitle                 : "Assistant Research Professor"
 name                     : ""
 description              : ""
 url                      : "https://klmartinez.github.io/"
@@ -94,7 +94,7 @@ social:
 
 # Site Author
 author:
-  name             : "Michael Culshaw-Maurer"
+  name             : "Kiana Lee Martinez"
   avatar           : # path of avatar image, e.g. "/assets/images/bio-photo.jpg"
   bio              : "I am a postdoctoral research associate researching pharmacogenomics."
   location         : "Tucson, AZ"
